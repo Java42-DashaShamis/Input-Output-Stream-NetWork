@@ -13,6 +13,11 @@ public class DirectoryFilesCopyImpl implements DirectoryFilesCopy {
 	public void displayDirectoryContent(InputOutput io, int maxDepth, String directoryPath) {
 		this.maxDepth = maxDepth;
 		File directoryNode = new File(directoryPath);
+		/* V.R. It is redundant check.
+		 * isDirectory() false in 2 cases:
+		 *  1. Node doesn't exist
+		 *  2. Node exists, but it isn't directory 
+		 */
 		if(directoryNode.exists()) {
 			displayContent(io, maxDepth, directoryNode);
 		}
@@ -22,7 +27,9 @@ public class DirectoryFilesCopyImpl implements DirectoryFilesCopy {
 		
 		io.writeObjectLine(" ".repeat(maxDepth-level) + directoryNode.getName() + ":" + (directoryNode.isDirectory() ? "dir" : "file"));
 		
-		
+		/* V.R. directoryNode is directory
+		 * So listFiles() cannot return null.
+		 */
 		if(level!=0 && directoryNode.isDirectory() && directoryNode.listFiles()!=null) {
 			Arrays.stream(directoryNode.listFiles()).forEach(n -> displayContent(io, level-1, n));
 		}
